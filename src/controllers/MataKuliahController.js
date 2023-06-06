@@ -15,10 +15,17 @@ const getOneMataKuliah = async (req, res, next) => {
   try {
     const { id } = req.params;
     const data = await MataKuliah.findById(id);
+    if (!data) {
+      throw new Error('Not found!.');
+    }
     res.send({ data, error: false });
   } catch (err) {
-    err.message = 'Not found!.';
-    err.status = 404;
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else {
+      err.message = 'Something went wrong! :(.';
+      err.status = 500;
+    }
     next(err);
   }
 };
@@ -47,6 +54,10 @@ const postMataKuliah = async (req, res, next) => {
 const putMataKuliah = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isDataExist = await MataKuliah.findById(id);
+    if (!isDataExist) {
+      throw new Error('Not found!.');
+    }
     const { kode, nama, sks, kelas } = req.body;
     if (kode && nama && sks && kelas) {
       const updatedData = { kode, nama, sks, kelas };
@@ -56,7 +67,9 @@ const putMataKuliah = async (req, res, next) => {
       throw new Error('Bad request!.');
     }
   } catch (err) {
-    if (err.message) {
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else if (err.message === 'Bad request!.') {
       err.status = 400;
     } else {
       err.message = 'Something went wrong! :(.';
@@ -69,11 +82,19 @@ const putMataKuliah = async (req, res, next) => {
 const deleteMataKuliah = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isDataExist = await MataKuliah.findById(id);
+    if (!isDataExist) {
+      throw new Error('Not found!.');
+    }
     await MataKuliah.findByIdAndDelete(id);
     res.send({ message: 'OK!', error: false });
   } catch (err) {
-    err.message = 'Not found!.';
-    err.status = 404;
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else {
+      err.message = 'Something went wrong! :(.';
+      err.status = 500;
+    }
     next(err);
   }
 };

@@ -20,8 +20,12 @@ const getOneMahasiswa = async (req, res, next) => {
     }
     res.send({ data, error: false });
   } catch (err) {
-    err.message = 'Not found!.';
-    err.status = 404;
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else {
+      err.message = 'Something went wrong! :(.';
+      err.status = 500;
+    }
     next(err);
   }
 };
@@ -50,6 +54,10 @@ const postMahasiswa = async (req, res, next) => {
 const putMahasiswa = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isDataExist = await Mahasiswa.findById(id);
+    if (!isDataExist) {
+      throw new Error('Not found!.');
+    }
     const { nama, nim, kelas, jenis_kelamin } = req.body;
     if (nama && nim && kelas && jenis_kelamin) {
       const updatedData = { nama, nim, kelas, jenis_kelamin };
@@ -59,7 +67,9 @@ const putMahasiswa = async (req, res, next) => {
       throw new Error('Bad request!.');
     }
   } catch (err) {
-    if (err.message) {
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else if (err.message === 'Bad request!.') {
       err.status = 400;
     } else {
       err.message = 'Something went wrong! :(.';
@@ -72,11 +82,19 @@ const putMahasiswa = async (req, res, next) => {
 const deleteMahasiswa = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isDataExist = await Mahasiswa.findById(id);
+    if (!isDataExist) {
+      throw new Error('Not found!.');
+    }
     await Mahasiswa.findByIdAndDelete(id);
     res.send({ message: 'OK!', error: false });
   } catch (err) {
-    err.message = 'Not found!.';
-    err.status = 404;
+    if (err.message === 'Not found!.') {
+      err.status = 404;
+    } else {
+      err.message = 'Something went wrong! :(.';
+      err.status = 500;
+    }
     next(err);
   }
 };

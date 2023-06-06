@@ -1,0 +1,543 @@
+{
+  "swagger": "2.0.0",
+  "info": {
+    "title": "Productzilla Take Home Task Day 35",
+    "description": "API data mahasiswa dan data mata kuliah",
+    "version": "1.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "schemes": ["http", "https"],
+  "paths": {
+    "/mahasiswa": {
+      "get": {
+        "tags": ["Mahasiswa"],
+        "summary": "Mendapatkan data seluruh mahasiswa",
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data seluruh mahasiswa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "_id": "647dfcf4b6373e1b6584e7f3",
+                      "nama": "Dimas Octa Maulana",
+                      "nim": 20081010038,
+                      "kelas": "A081",
+                      "jenis_kelamin": "L"
+                    },
+                    {
+                      "_id": "5bd761dcae323e45a93ccfe8",
+                      "nama": "Ridwan Effendi",
+                      "nim": 20081010041,
+                      "kelas": "A081",
+                      "jenis_kelamin": "L"
+                    }
+                  ]
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Mahasiswa"],
+        "summary": "Menambahkan data mahasiswa baru",
+        "parameters": [
+          {
+            "name": "new_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/properties/schemas/Mahasiswa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data berhasil ditambahkan",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "new_data": {
+                  "type": "object",
+                  "example": {
+                    "nama": "Elon Reeve Musk",
+                    "nim": 20081010290,
+                    "kelas": "B081",
+                    "jenis_kelamin": "L"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "400": {
+            "description": "Permintaan tidak valid (missing required field)",
+            "schema": {
+              "$ref": "#/components/responses/schemas/BadRequestResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/mahasiswa/{id}": {
+      "get": {
+        "tags": ["Mahasiswa"],
+        "summary": "Mendapatkan satu data mahasiswa berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mahasiswa",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan satu data mahasiswa berdasarkan ID pada params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "_id": "647dfcf4b6373e1b6584e7f3",
+                    "nama": "Dimas Octa Maulana",
+                    "nim": 20081010038,
+                    "kelas": "A081",
+                    "jenis_kelamin": "L"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "404": {
+            "description": "Tidak dapat menemukan data mahasiswa dengan ID yang telah diberikan",
+            "schema": {
+              "$ref": "#/components/responses/schemas/NotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Mahasiswa"],
+        "summary": "Melakukan update satu data mahasiswa berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mahasiswa",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "updated_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/properties/schemas/Mahasiswa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data mahasiswa berhasil diperbarui",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "updated_data": {
+                  "type": "object",
+                  "example": {
+                    "nama": "Elon Reeve Musk",
+                    "nim": 20081010290,
+                    "kelas": "B081",
+                    "jenis_kelamin": "L"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "400": {
+            "description": "Permintaan tidak valid (missing required field)",
+            "schema": {
+              "$ref": "#/components/responses/schemas/BadRequestResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Mahasiswa"],
+        "summary": "Menghapus satu data mahasiswa berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mahasiswa",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data mahasiswa berhasil dihapus",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "OK!"
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "404": {
+            "description": "Tidak dapat menemukan data mahasiswa dengan ID yang telah diberikan",
+            "schema": {
+              "$ref": "#/components/responses/schemas/NotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/mata-kuliah": {
+      "get": {
+        "tags": ["Mata kuliah"],
+        "summary": "Mendapatkan data seluruh mata kuliah",
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data seluruh mata kuliah",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "_id": "647e05bd54ea2f4ef20487d6",
+                      "kode": "1050",
+                      "nama": "Aljabar Matriks",
+                      "sks": 3,
+                      "kelas": "A081"
+                    },
+                    {
+                      "_id": "5bd761dcae323e45a93ccfed",
+                      "kode": "1080",
+                      "nama": "Kalkulus",
+                      "sks": 3,
+                      "kelas": "A081"
+                    }
+                  ]
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Mata kuliah"],
+        "summary": "Menambahkan data mata kuliah baru",
+        "parameters": [
+          {
+            "name": "new_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/properties/schemas/MataKuliah"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data berhasil ditambahkan",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "new_data": {
+                  "type": "object",
+                  "example": {
+                    "kode": "1080",
+                    "nama": "Kalkulus",
+                    "sks": 3,
+                    "kelas": "A081"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "400": {
+            "description": "Permintaan tidak valid (missing required field)",
+            "schema": {
+              "$ref": "#/components/responses/schemas/BadRequestResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/mata-kuliah/{id}": {
+      "get": {
+        "tags": ["Mata kuliah"],
+        "summary": "Mendapatkan satu data mata kuliah berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mata kuliah",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan satu data mata kuliah berdasarkan ID pada params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "_id": "5bd761dcae323e45a93ccfed",
+                    "kode": "1080",
+                    "nama": "Kalkulus",
+                    "sks": 3,
+                    "kelas": "A081"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "404": {
+            "description": "Tidak dapat menemukan data mata kuliah dengan ID yang telah diberikan",
+            "schema": {
+              "$ref": "#/components/responses/schemas/NotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Mata kuliah"],
+        "summary": "Melakukan update satu data mata kuliah berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mata kuliah",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "updated_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/properties/schemas/MataKuliah"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data mata kuliah berhasil diperbarui",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "updated_data": {
+                  "type": "object",
+                  "example": {
+                    "kode": "1080",
+                    "nama": "Kalkulus",
+                    "sks": 3,
+                    "kelas": "A081"
+                  }
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "400": {
+            "description": "Permintaan tidak valid (missing required field)",
+            "schema": {
+              "$ref": "#/components/responses/schemas/BadRequestResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Mata kuliah"],
+        "summary": "Menghapus satu data mata kuliah berdasarkan ID pada params",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID mata kuliah",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data mata kuliah berhasil dihapus",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "OK!"
+                },
+                "error": { "type": "boolean", "example": false }
+              }
+            }
+          },
+          "404": {
+            "description": "Tidak dapat menemukan data mata kuliah dengan ID yang telah diberikan",
+            "schema": {
+              "$ref": "#/components/responses/schemas/NotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Error dari server",
+            "schema": {
+              "$ref": "#/components/responses/schemas/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "properties": {
+      "schemas": {
+        "Mahasiswa": {
+          "type": "object",
+          "properties": {
+            "nama": { "type": "string" },
+            "nim": { "type": "number" },
+            "kelas": { "type": "string" },
+            "jenis_kelamin": { "type": "string" }
+          },
+          "example": {
+            "nama": "Elon Reeve Musk",
+            "nim": 20081010290,
+            "kelas": "B081",
+            "jenis_kelamin": "L"
+          }
+        },
+        "MataKuliah": {
+          "type": "object",
+          "properties": {
+            "kode": { "type": "string" },
+            "nama": { "type": "string" },
+            "sks": { "type": "number" },
+            "kelas": { "type": "string" }
+          },
+          "example": {
+            "kode": "1080",
+            "nama": "Kalkulus",
+            "sks": 3,
+            "kelas": "A081"
+          }
+        }
+      }
+    },
+    "responses": {
+      "schemas": {
+        "BadRequestResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string", "example": "Bad request!." },
+            "status": { "type": "integer", "example": 400 },
+            "error": { "type": "string", "example": true }
+          }
+        },
+        "InternalServerErrorResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string", "example": "Something went wrong! :(." },
+            "status": { "type": "integer", "example": 500 },
+            "error": { "type": "string", "example": true }
+          }
+        },
+        "UnauthorizedResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string", "example": "Unauthorized!." },
+            "status": { "type": "integer", "example": 401 },
+            "error": { "type": "string", "example": true }
+          }
+        },
+        "NotFoundResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string", "example": "Not found!." },
+            "status": { "type": "integer", "example": 404 },
+            "error": { "type": "string", "example": true }
+          }
+        }
+      }
+    }
+  }
+}
